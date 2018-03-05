@@ -31,7 +31,7 @@ public class App
 
          org.jsoup.select.Elements rows = doc.select("tr.redica-so-valuti");
          
-         
+         org.jsoup.select.Elements date=doc.select("td.ns-kursna-home-datum");
          
          String jsonMsg = "[";
          
@@ -45,7 +45,14 @@ public class App
              int i = 1;
              
              jsonMsg = jsonMsg + "{";
-
+             
+             jsonMsg = jsonMsg + "\"Датум\":";
+          	
+          	 jsonMsg = jsonMsg + "\""+ date.text()+"\"";
+              
+          	 jsonMsg = jsonMsg + ",";
+          	
+          	
              for (org.jsoup.nodes.Element column:columns)
 
              {           	
@@ -116,21 +123,21 @@ public class App
          java.util.List<DBObject> docs = new ArrayList<DBObject>();
          
          BasicDBObject query=new BasicDBObject();
-         query.put("Назив на Банка", "HalkBank");//go baram od kolekcijata
+         query.put("Назив на Банка", "Халк банка АД Скопје");//go baram od kolekcijata
          DBObject cur=collectionBan.findOne(query);//go smestuvam vo variable
          
          DBObject jArray =  (DBObject) JSON.parse(jsonMsg);//ova kako eden objekt go glea cel json 
          
          System.out.println(jArray);
          Set<String> keys = jArray.keySet();//gi vadi klucevite od jsonot
-         for (String key : keys) {//za sekoj kluc vo setot klucevi
+         for (String key : keys) {
         	 DBObject tmp= (DBObject)jArray.get(key);
         	 tmp.put("Назив на Банка", cur);       	 
 			docs.add(tmp);
 		 }
-         
+         System.out.println(docs);
          collection.insert(docs);
-         // kako hash mapa gi gledalo JSON bibliotekava, ali radi sea falaaaaaaaaaa! nsto
+         // kako hash mapa gi gledalo JSON bibliotekava
     	//collection.insert(dbObject);
     	
     	System.out.println("Uspesno vneseno vo baza");
